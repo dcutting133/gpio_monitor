@@ -47,6 +47,7 @@ int main(int argc, char **argv) {
     wiringPiSetup(); // Enables WiringPi for GPIO control
     initPins();
 
+    digitalWrite(OUTPUT1, HIGH);
     ros::Subscriber gpioSub = n.subscribe("gpio/outputs", 5, outputCallback);
     gpioPub = n.advertise<gpio_monitor::gpio_input>("gpio/inputs", 5);
     ros::spin();
