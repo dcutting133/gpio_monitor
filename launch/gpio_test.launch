@@ -1,0 +1,3 @@
+<launch>
+	<node name="gpio_monitor" pkg="yeti_snowplow" type="gpio_monitor"/>
+</launch>

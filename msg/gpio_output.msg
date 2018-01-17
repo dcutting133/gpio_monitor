@@ -1,2 +1,1 @@
-bool estop
-byte driveMode
+bool driveMode
