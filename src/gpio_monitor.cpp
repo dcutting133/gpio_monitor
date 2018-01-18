@@ -53,7 +53,7 @@ void checkInputs() {
     inputs.input1 = input1;
     inputs.input2 = input2;
     inputs.input3 = input3;
-    gpioPub.advertise(inputs);
+    gpioPub.publish(inputs);
 }
 
 void outputCallback(const gpio_monitor::gpio_output::ConstPtr& outputs) {
