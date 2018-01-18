@@ -21,24 +21,52 @@
 
 gpio_monitor::gpio_input inputs;
 bool input1;
+bool input2;
+bool input3;
 
 gpio_monitor::gpio_output outputs;
 bool output1;
+bool output2;
+bool output3;
 
 ros::Publisher gpioPub;
 
 void initPins() {
     pinMode(INPUT1, INPUT);
+    pinMode(INPUT2, INPUT);
+    pinMode(INPUT3, INPUT);
     pinMode(OUTPUT1, OUTPUT);
-}
-
-void updateOutputs() {
-
+    pinMode(OUTPUT2, OUTPUT);
+    pinMode(OUTPUT3, OUTPUT);
+    input1 = digitalRead(INPUT1) == 0 ? false : true;
+    input2 = digitalRead(INPUT2) == 0 ? false : true;
+    input3 = digitalRead(INPUT3) == 0 ? false : true;
+    output1 = false;
+    output2 = false;
+    output3 = false;
 }
 
 void outputCallback(const gpio_monitor::gpio_output::ConstPtr& outputs) {
-    output1 = outputs->driveMode;
-    updateOutputs();
+    output1 = outputs->output1;
+    output2 = outputs->output2;
+    output3 = outputs->output3;
+    if (output1) {
+        digitalWrite(OUTPUT1, HIGH);
+    } else {
+        digitalWrite(OUTPUT1, LOW);
+    }
+
+    if (output2) {
+        digitalWrite(OUTPUT2, HIGH);
+    } else {
+        digitalWrite(OUTPUT2, LOW);
+    }
+
+    if (output3) {
+        digitalWrite(OUTPUT3, HIGH);
+    } else {
+        digitalWrite(OUTPUT3, LOW);
+    }
 }
 
 int main(int argc, char **argv) {
@@ -46,19 +74,6 @@ int main(int argc, char **argv) {
     ros::NodeHandle n;
     wiringPiSetup(); // Enables WiringPi for GPIO control
     initPins();
-
-    ros::Rate loopRate(1);
-    bool pls = true;
-	
-    while(ros::ok()) {
-	if(pls) {
-	    digitalWrite(OUTPUT1, LOW);
-	} else {
-	    digitalWrite(OUTPUT1, HIGH);
-	}
-        pls = !pls;
-	loopRate.sleep();
-    }
     
     ros::Subscriber gpioSub = n.subscribe("gpio/outputs", 5, outputCallback);
     gpioPub = n.advertise<gpio_monitor::gpio_input>("gpio/inputs", 5);
