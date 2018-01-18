@@ -46,6 +46,16 @@ void initPins() {
     output3 = false;
 }
 
+void checkInputs() {
+    input1 = digitalRead(INPUT1) == 0 ? false : true;
+    input2 = digitalRead(INPUT2) == 0 ? false : true;
+    input3 = digitalRead(INPUT3) == 0 ? false : true;
+    inputs.input1 = input1;
+    inputs.input2 = input2;
+    inputs.input3 = input3;
+    gpioPub.advertise(inputs);
+}
+
 void outputCallback(const gpio_monitor::gpio_output::ConstPtr& outputs) {
     output1 = outputs->output1;
     output2 = outputs->output2;
@@ -74,9 +84,9 @@ int main(int argc, char **argv) {
     ros::NodeHandle n;
     wiringPiSetup(); // Enables WiringPi for GPIO control
     initPins();
-    
     ros::Subscriber gpioSub = n.subscribe("gpio/outputs", 5, outputCallback);
     gpioPub = n.advertise<gpio_monitor::gpio_input>("gpio/inputs", 5);
+    checkInputs();
     ros::spin();
     return 0;
 }
