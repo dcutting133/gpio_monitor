@@ -17,7 +17,7 @@
 
 #define OUTPUT1 1 // (pin 18 / phys pin 12), drive mode led
 #define OUTPUT2 4 // (pin 23 / phys pin 16), NA
-#define OUTPUT3 5 // (pin 24 / phys pin 18), NA
+#define OUTPUT3 5 // (pin 24 / phys pin 18), GPIO initialized
 
 gpio_monitor::gpio_input inputs;
 bool input1;
@@ -40,10 +40,13 @@ void initPins() {
     pinMode(OUTPUT3, OUTPUT);
     input1 = digitalRead(INPUT1) == 0 ? false : true;
     input2 = digitalRead(INPUT2) == 0 ? false : true;
-    input3 = digitalRead(INPUT3) == 0 ? false : true;
     output1 = false;
     output2 = false;
-    output3 = false;
+    if(ros::ok()) {
+        output3 = true;
+    } else {
+        output3 = false;
+    }
 }
 
 void checkInputs() {
@@ -59,7 +62,6 @@ void checkInputs() {
 void outputCallback(const gpio_monitor::gpio_output::ConstPtr& outputs) {
     output1 = outputs->output1;
     output2 = outputs->output2;
-    output3 = outputs->output3;
     if (output1) {
         digitalWrite(OUTPUT1, HIGH);
     } else {
@@ -84,6 +86,7 @@ int main(int argc, char **argv) {
     ros::NodeHandle n;
     wiringPiSetup(); // Enables WiringPi for GPIO control
     initPins();
+
     ros::Subscriber gpioSub = n.subscribe("gpio/outputs", 5, outputCallback);
     gpioPub = n.advertise<gpio_monitor::gpio_input>("gpio/inputs", 5);
     checkInputs();
