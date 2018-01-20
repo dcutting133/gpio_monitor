@@ -73,12 +73,6 @@ void outputCallback(const gpio_monitor::gpio_output::ConstPtr& outputs) {
     } else {
         digitalWrite(OUTPUT2, LOW);
     }
-
-    if (output3) {
-        digitalWrite(OUTPUT3, HIGH);
-    } else {
-        digitalWrite(OUTPUT3, LOW);
-    }
 }
 
 int main(int argc, char **argv) {
@@ -86,6 +80,12 @@ int main(int argc, char **argv) {
     ros::NodeHandle n;
     wiringPiSetup(); // Enables WiringPi for GPIO control
     initPins();
+
+    if (output3) {
+        digitalWrite(OUTPUT3, HIGH);
+    } else {
+        digitalWrite(OUTPUT3, LOW);
+    }
 
     ros::Subscriber gpioSub = n.subscribe("gpio/outputs", 5, outputCallback);
     gpioPub = n.advertise<gpio_monitor::gpio_input>("gpio/inputs", 5);
