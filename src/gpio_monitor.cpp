@@ -16,7 +16,7 @@
 #define INPUT3 3 // (pin 22 / phys pin 15), NA
 
 #define OUTPUT1 1 // (pin 18 / phys pin 12), drive mode led
-#define OUTPUT2 4 // (pin 23 / phys pin 16), NA
+#define OUTPUT2 4 // (pin 23 / phys pin 16), robotech error
 #define OUTPUT3 5 // (pin 24 / phys pin 18), GPIO initialized
 
 gpio_monitor::gpio_input inputs;
